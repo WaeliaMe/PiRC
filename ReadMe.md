@@ -11,10 +11,12 @@ The model is designed to balance:
 - 💧 **Liquidity Pools** — ensure market stability  
 - 🔄 **Developer Incentives** — reward responsible project development  
 - 🛡️ **Ecosystem Reserve** — protect the ecosystem and participants  
+- ⚡ **On-chain Verified Pi Base transactions** — transparency and real activity
 
 The goal is to create a **sustainable, transparent, and secure token economy** that encourages innovation while safeguarding participants.
 
 ---
+
 ## 🛠️ FEATURES & BENEFITS
 
 - **Transparent, fair, and data-driven token distribution**  
@@ -24,9 +26,10 @@ The goal is to create a **sustainable, transparent, and secure token economy** t
 - **Clear visualizations** for all stakeholders using diagrams and charts  
 - **On-chain profit verification layer** for transparency  
 - **Security and accountability mechanisms** including **penalties & slashing**  
+- **Base-Linked Pi + Verified Transactions** tracking  
 - **Python Package** for example algorithms, ready for developers
 
-⚡️
+---
 
 ## 📊 TOKEN ALLOCATION
 
@@ -36,7 +39,7 @@ The goal is to create a **sustainable, transparent, and secure token economy** t
 | 🔄 Developers          | 20%            | Incentivize responsible development, milestone-based release |
 | 🛡️ Ecosystem Reserve   | 15%            | Protect ecosystem, fund emergencies, gradually redistributed |
 
-⚡️
+---
 
 ## 📈 HOW TO USE
 
@@ -47,9 +50,12 @@ The goal is to create a **sustainable, transparent, and secure token economy** t
 5. Check **profit_verification/** for on-chain profit sources  
 6. Check **security/** for **penalties, slashing, and fraud detection logic**  
 7. Check **economic_model/** for detailed profit-based incentive logic  
-8. Run **code_examples/** to see example computations for allocation and reserve management
+8. Run **code_examples/** to see example computations for allocation, rewards, and reserve management  
+
+---
 
 ## 📂 FULL FOLDER STRUCTURE
+
 ```text
 hybrid-token-model/
 ├── README.md                  ← This file (updated with folder structure)
@@ -76,8 +82,8 @@ hybrid-token-model/
 │   ├── pi_hybrid_examples/
 │   │   ├── __init__.py
 │   │   ├── token_allocation.py
-│   │   └── reserve_redistribution.py
+│   │   ├── reserve_redistribution.py
+│   │   └── base_linked_pi_example.py  ← Base-Linked Pi + Verified Transactions + Penalties
 │   ├── setup.py
 │   └── README.md              ← Instructions to install & use the package
 └── LICENSE                    ← License file
-
