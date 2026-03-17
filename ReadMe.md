@@ -47,8 +47,9 @@ The goal is to create a **sustainable, transparent, and secure token economy** t
 5. Check **profit_verification/** for on-chain profit sources  
 6. Check **security/** for **penalties, slashing, and fraud detection logic**  
 7. Check **economic_model/** for detailed profit-based incentive logic  
-8. Run **code_examples/** to see example computations for allocation and reserve management  
+8. Run **code_examples/** to see example computations for allocation and reserve management
 
+## 📂 FULL FOLDER STRUCTURE
 ```text
 hybrid-token-model/
 ├── README.md                  ← This file (updated with folder structure)
