@@ -29,34 +29,20 @@ The goal is to create a **sustainable, transparent, and secure token economy** t
 ## 📂 Repository Structure
 
 hybrid-token-model/
-│
-├── README.md
-├── proposal.md
-├── tokenomics.md
-├── governance.md
-├── implementation.md
-├── profit_verification.md
-│
-├── architecture/
-│   ├── system_overview.md
-│   ├── profit_flow.md
-│   └── governance_flow.md
-│
-├── security/
-│   ├── security_overview.md
-│   ├── penalties_and_slashing.md
-│   └── fraud_detection.md
-│
-├── diagrams/
-│   ├── token_distribution.png
-│   ├── reserve_flow.png
-│   └── ecosystem_rewards.png
-│
-├── code_examples/
-│   ├── token_allocation.py
-│   └── reserve_redistribution.py
-│
-└── LICENSE
+
+README.md
+proposal.md
+tokenomics.md
+governance.md
+implementation.md
+profit_verification.md
+
+architecture/
+security/
+diagrams/
+code_examples/
+
+LICENSE
 ---
 
 ## 🛠️ Features & Benefits
