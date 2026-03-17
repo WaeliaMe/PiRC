@@ -1,5 +1,5 @@
 See [PiRC1: Pi Ecosystem Token Design](./PiRC1/ReadMe.md)
-# Hybrid Profit-Driven Token Launch Model for the Pi Ecosystem
+# Hybrid Token Launch Model for Pi Network
 
 ---
 
@@ -14,6 +14,40 @@ The model is designed to balance:
 
 The goal is to create a **sustainable, transparent, and secure token economy** that encourages innovation while safeguarding participants.
 
+---
+
+## 📂 Repository Structure (Updated)
+
+```text
+hybrid-token-model/
+├── README.md                  ← This file (updated with folder structure)
+├── proposal.md                ← Full proposal text
+├── tokenomics.md              ← Detailed token allocation and flow
+├── governance.md              ← Governance and voting mechanisms
+├── implementation.md          ← Technical implementation ideas
+├── architecture/              ← System architecture and flow diagrams
+│   └── architecture_overview.md
+├── profit_verification/       ← On-chain profit verification logic
+│   └── profit_sources.md
+├── security/                  ← Security & accountability layer
+│   ├── penalties_and_slashing.md
+│   ├── fraud_detection.md
+│   └── security_overview.md
+├── economic_model/            ← Economic and incentive model
+│   └── economic_model.md
+├── diagrams/                  ← Visual illustrations of token flow, reserve, and charts
+│   ├── token_distribution.png
+│   ├── reserve_flow.png
+│   ├── ecosystem_rewards.png
+│   └── hybrid_token_flow.png  ← Full system diagram (revenue → distribution → governance)
+├── code_examples/             ← Example algorithms and pseudo-code (Python Package)
+│   ├── pi_hybrid_examples/
+│   │   ├── __init__.py
+│   │   ├── token_allocation.py
+│   │   └── reserve_redistribution.py
+│   ├── setup.py
+│   └── README.md              ← Instructions to install & use the package
+└── LICENSE                    ← License file
 ---
 
 ## 📊 Token Allocation
