@@ -54,6 +54,15 @@ The goal is to create a **sustainable, transparent, and secure token economy** t
 
 ---
 
+## ✅ Notes
+
+- All calculations reference **Pi Base**; USD is only for display/evaluation purposes  
+- The system tracks **real verified transactions** and adjusts rewards dynamically  
+- **Penalties, slashing, and permanent bans** are enforced via smart contracts  
+- Python examples help developers test **allocation, redistribution, and governance logic**
+  
+---
+  
 ## 📂 FULL FOLDER STRUCTURE
 
 ```text
