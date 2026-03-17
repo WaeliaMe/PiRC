@@ -12,3 +12,5 @@ reserve = total_profit * 0.15
 print("Liquidity:", liquidity)
 print("Developer allocation:", developers)
 print("Reserve:", reserve)
+
+The percentages can be adjusted based on project needs.
