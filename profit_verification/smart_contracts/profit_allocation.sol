@@ -9,6 +9,15 @@ contract ProfitAllocation {
     mapping(address => uint256) public developerAllocation;
     mapping(address => uint256) public reserveAllocation;
 
+    // Event to log each distribution
+    event ProfitDistributed(
+        uint256 totalProfit,
+        uint256 liquidity,
+        uint256 developers,
+        uint256 reserve,
+        uint256 timestamp
+    );
+
     constructor() {
         owner = msg.sender;
     }
@@ -21,9 +30,12 @@ contract ProfitAllocation {
         uint256 developers = (profit * 20) / 100;
         uint256 reserve = (profit * 15) / 100;
 
-        // Example: distribute to contract addresses (for simplicity)
+        // Example: assign to owner addresses (placeholder)
         liquidityAllocation[owner] += liquidity;
         developerAllocation[owner] += developers;
         reserveAllocation[owner] += reserve;
+
+        // Emit event for transparency
+        emit ProfitDistributed(profit, liquidity, developers, reserve, block.timestamp);
     }
 }
