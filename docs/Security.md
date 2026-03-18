@@ -1,59 +1,59 @@
-# Security & Penalti Mechanisms – Pi Hybrid Token
+# Security & Penalty Mechanisms – Pi Hybrid Token
 
 ## Overview
-File ini menjelaskan **mekanisme keamanan dan penalti** dalam model token hybrid Pi Network, termasuk:
+This file explains the **security and penalty mechanisms** in the Pi Network Hybrid Token model, including:
 
 - Reward suspension  
 - Allocation reduction  
 - Slashing (minor → major → repeated violations)  
 - Permanent ban  
 
-Transparansi dan auditability dijaga dengan **event logging** dan governance review.
+Transparency and auditability are maintained with **event logging** and governance review.
 
 ---
 
 ## 1. Reputation System & Penalties
 
 ### 1.1 Reputation Reduction Logic
-- Saat `reduceAllocation` dijalankan:  
+- When `reduceAllocation` is executed:  
 ```text
 repReduction = amount * 100 / piBalance[participant]
 ```
-- ⚠️ Pastikan **piBalance tidak 0** setelah pengurangan untuk menghindari division by zero.  
-- Urutan perhitungan:  
-  1. Kurangi allocation  
+- ⚠️ Ensure **piBalance is not 0** after deduction to avoid division by zero.  
+- Calculation order:  
+  1. Reduce allocation  
   2. Update piBalance  
-  3. Hitung repReduction  
-- Tujuan: memberikan insentif untuk perilaku baik dan penalti adil.
+  3. Calculate repReduction  
+- Purpose: incentivize good behavior and enforce fair penalties.
 
 ### 1.2 Penalty Types
 | Type | Description | Governance Involvement |
 |------|------------|----------------------|
-| Financial | Pengurangan token allocation | Owner / Multi-sig |
-| Reputation | Pengurangan reputasi peserta | Owner / Multi-sig |
-| Governance | Suspend hak voting sementara | Governance vote |
-| Permanent Ban | Block peserta dari ekosistem | Governance vote berbasis trust/reputation |
+| Financial | Reduce token allocation | Owner / Multi-sig |
+| Reputation | Reduce participant reputation | Owner / Multi-sig |
+| Governance | Temporarily suspend voting rights | Governance vote |
+| Permanent Ban | Block participant from ecosystem | Governance vote based on trust/reputation |
 
 ---
 
 ## 2. Reward Suspension
-- Suspend reward **tidak hanya emit event**, tapi menahan reward update dan transfer selama durasi tertentu.  
+- Reward suspension **does not only emit an event**, but halts reward updates and transfers for a specific duration.  
 - Event: `RewardSuspended(participant, duration)`  
-- Milestone-related logic: duration bisa dikaitkan dengan milestone release.
+- Milestone logic: duration can be linked to milestone release.
 
 ---
 
 ## 3. Slashing Mechanism
-- **Dynamic & on-chain**, mencakup semua skala pelanggaran: minor → major → repeated violations.  
-- Fungsi `slash(percent)` harus dicek agar tidak terjadi **underflow** atau unexpected behavior.  
-- Pastikan `percent` valid dan **piBalance > 0** sebelum pengurangan.
+- **Dynamic & on-chain**, covering all violation levels: minor → major → repeated violations.  
+- Function `slash(percent)` must be checked to prevent **underflow** or unexpected behavior.  
+- Ensure `percent` is valid and **piBalance > 0** before deduction.
 
 ---
 
 ## 4. Owner & Governance Security
-- Fungsi kritikal (`slash`, `permanentBan`, `reduceAllocation`) awalnya owner-only.  
-- Disarankan menggunakan **multi-sig / tim governance** untuk mengurangi risiko abuse.  
-- Event logging memastikan transparansi:  
+- Critical functions (`slash`, `permanentBan`, `reduceAllocation`) are owner-only by default.  
+- Recommended: use **multi-sig / governance team** to reduce abuse risk.  
+- Event logging ensures transparency:  
 ```solidity
 event AllocationReduced(address participant, uint256 amount);
 event Slashed(address participant, uint256 percent);
@@ -63,40 +63,40 @@ event PermanentBan(address participant);
 ---
 
 ## 5. Audit & Transparency
-- Semua perubahan dicatat **on-chain** dan dapat di-query via API:  
+- All changes are **on-chain** and queryable via API:  
   - RewardSuspended  
   - AllocationReduced  
   - Slashed  
   - PermanentBan  
-- Memudahkan komunitas dan auditor untuk memastikan fairness.
+- Helps the community and auditors ensure fairness.
 
 ---
 
 ## 6. Gas Optimization
-- `calculateValue` dan update `piBalance` per transaksi mahal untuk skala besar.  
-- Solusi:  
+- `calculateValue` and updating `piBalance` per transaction is expensive at large scale.  
+- Solutions:  
   - **Batch processing**  
-  - **Off-chain computation** untuk simulasinya, update on-chain hanya final state.
+  - **Off-chain computation** for simulations, only final state updated on-chain.
 
 ---
 
 ## 7. Boundary Checks & Edge Cases
-- 0 balance → reward atau slashing harus tidak crash  
-- 100% slash → peserta benar-benar dihentikan dari reward  
-- Suspend reward duration → harus dikontrol sesuai milestone
+- 0 balance → reward or slashing must **not crash**  
+- 100% slash → participant fully stopped from receiving rewards  
+- Suspend reward duration → must be controlled according to milestones
 
 ---
 
 ## 8. Unit Tests & Simulation
-- Direkomendasikan menambahkan unit tests:  
-  - Semua tipe penalti diuji  
-  - Semua level pelanggaran diuji  
-  - Simulasi random participant behavior untuk stress test  
-- Membantu developer dan auditor memastikan keamanan logika.
+- Recommended to add unit tests:  
+  - Test all penalty types  
+  - Test all violation levels  
+  - Simulate random participant behavior for stress testing  
+- Helps developers and auditors verify logic security.
 
 ---
 
 ## 9. Notes
-- Semua mekanisme **dynamic** berdasarkan verified transactions.  
-- Reward update, slashing, dan penalti harus **selalu diuji di testing environment** sebelum mainnet.  
-- Integrasi dengan README dan BaseLinkedPiWithPenalties smart contract wajib untuk konsistensi dokumentasi.
+- All mechanisms are **dynamic**, based on verified transactions.  
+- Reward updates, slashing, and penalties should **always be tested in a local/testing environment** before mainnet deployment.  
+- Integration with README and BaseLinkedPiWithPenalties smart contract is required for consistent documentation.
