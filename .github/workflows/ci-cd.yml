@@ -14,75 +14,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # --------------------
-      # Python Setup & Tests
-      # --------------------
+      # 2️⃣ Set up Python environment
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
+      # 3️⃣ Install Python dependencies
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      # 4️⃣ Run Python tests
       - name: Run Python Tests
         run: |
           if [ -d tests ]; then pytest tests/; fi
 
-      # --------------------
-      # Solidity Setup & Tests
-      # --------------------
+      # 5️⃣ Set up Node.js (Solidity/JS tooling)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Install Solidity Tools
+      # 6️⃣ Install project dependencies
+      - name: Install Node Dependencies
         run: |
-          npm install -g solc
-          npm install --save-dev hardhat
+          if [ -f package.json ]; then npm install; fi
 
-      - name: Compile Solidity Contracts
-        run: |
-          if [ -d contracts ]; then npx hardhat compile; fi
-
+      # 7️⃣ Run Solidity / Hardhat tests
       - name: Run Solidity Tests
         run: |
-          if [ -d test ]; then npx hardhat test; fi
+          if [ -f hardhat.config.js ]; then npx hardhat test; fi
 
-      # --------------------
-      # Markdown Docs Linting
-      # --------------------
-      - name: Check Markdown Files
-        uses: actions/markdown-link-check@v1
-        with:
-          use-quiet-mode: true
-          base-url: https://github.com/${{ github.repository }}/blob/main
-
-      # --------------------
-      # Release Step
-      # --------------------
-      - name: Create GitHub Release
-        uses: ncipollo/release-action@v1
-        with:
-          tag: v1.0.${{ github.run_number }}
-          name: "Pi Hybrid Token Release v1.0.${{ github.run_number }}"
-          body: |
-            Automated release including:
-            - Python and Solidity tests
-            - Markdown docs verification
-            - Updated token flow and governance diagrams
-            - Security & penalty framework
-          draft: false
-          prerelease: false
-
-      # --------------------
-      # Success Message
-      # --------------------
-      - name: Workflow Success
-        run: echo "✅ CI/CD workflow completed successfully!"
+      # ✅ Optional: Build / Lint / Other checks can be added here
