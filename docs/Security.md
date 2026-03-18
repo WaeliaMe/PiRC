@@ -1,102 +1,103 @@
-# Security & Penalty Mechanisms – Pi Hybrid Token
+# Security & Penalty Guidelines – Pi Hybrid Token
 
 ## Overview
-This file explains the **security and penalty mechanisms** in the Pi Network Hybrid Token model, including:
+This document outlines the **security framework and penalty mechanisms** for the Pi Hybrid Token ecosystem. It covers:
 
 - Reward suspension  
 - Allocation reduction  
-- Slashing (minor → major → repeated violations)  
-- Permanent ban  
+- Slashing (from minor to repeated violations)  
+- Permanent bans  
 
-Transparency and auditability are maintained with **event logging** and governance review.
+All mechanisms emphasize transparency, auditability, and community governance.
 
 ---
 
-## 1. Reputation System & Penalties
+## 1. Reputation & Penalty Principles
 
-### 1.1 Reputation Reduction Logic
-- When `reduceAllocation` is executed:  
+### 1.1 Adjusting Reputation
+- When reducing a participant's allocation:  
 ```text
-repReduction = amount * 100 / piBalance[participant]
+reputationImpact = amount * 100 / piBalance[participant]
 ```
-- ⚠️ Ensure **piBalance is not 0** after deduction to avoid division by zero.  
-- Calculation order:  
-  1. Reduce allocation  
-  2. Update piBalance  
-  3. Calculate repReduction  
-- Purpose: incentivize good behavior and enforce fair penalties.
+- Ensure the participant’s balance is checked to prevent **division by zero**.  
+- The recommended order of operations:  
+  1. Deduct allocation  
+  2. Update balance  
+  3. Apply reputation adjustment  
+- Goal: encourage responsible behavior and fairness.
 
-### 1.2 Penalty Types
-| Type | Description | Governance Involvement |
-|------|------------|----------------------|
-| Financial | Reduce token allocation | Owner / Multi-sig |
-| Reputation | Reduce participant reputation | Owner / Multi-sig |
-| Governance | Temporarily suspend voting rights | Governance vote |
-| Permanent Ban | Block participant from ecosystem | Governance vote based on trust/reputation |
+### 1.2 Penalty Categories
+| Category | Purpose | Managed By |
+|----------|---------|------------|
+| Financial | Reduce token rewards | Owner / Multi-sig |
+| Reputation | Lower participant reputation score | Owner / Multi-sig |
+| Governance | Suspend voting rights temporarily | Community vote |
+| Permanent Ban | Block participant from ecosystem | Trust-based governance vote |
 
 ---
 
 ## 2. Reward Suspension
-- Reward suspension **does not only emit an event**, but halts reward updates and transfers for a specific duration.  
-- Event: `RewardSuspended(participant, duration)`  
-- Milestone logic: duration can be linked to milestone release.
+- Reward suspension halts token updates for a defined period.  
+- Event logged: `RewardSuspended(participant, duration)`  
+- Can be linked to milestone timing for automatic enforcement.
 
 ---
 
-## 3. Slashing Mechanism
-- **Dynamic & on-chain**, covering all violation levels: minor → major → repeated violations.  
-- Function `slash(percent)` must be checked to prevent **underflow** or unexpected behavior.  
-- Ensure `percent` is valid and **piBalance > 0** before deduction.
+## 3. Slashing
+- Slashing is **dynamic and recorded on-chain** for all levels of violations.  
+- Example function: `slash(percent)`  
+- Always check for **balance sufficiency** to prevent errors or underflows.
 
 ---
 
-## 4. Owner & Governance Security
-- Critical functions (`slash`, `permanentBan`, `reduceAllocation`) are owner-only by default.  
-- Recommended: use **multi-sig / governance team** to reduce abuse risk.  
+## 4. Control & Governance
+- Core functions are restricted to **owner or multi-sig**.  
 - Event logging ensures transparency:  
 ```solidity
 event AllocationReduced(address participant, uint256 amount);
 event Slashed(address participant, uint256 percent);
 event PermanentBan(address participant);
 ```
+- Governance review should complement owner actions to reduce risk of abuse.
 
 ---
 
 ## 5. Audit & Transparency
-- All changes are **on-chain** and queryable via API:  
-  - RewardSuspended  
-  - AllocationReduced  
-  - Slashed  
-  - PermanentBan  
-- Helps the community and auditors ensure fairness.
+- Every action is recorded on-chain and can be queried via API:  
+  - Suspended rewards  
+  - Reduced allocation  
+  - Slashed participants  
+  - Permanent bans  
+- Enables the community to monitor compliance and fairness.
 
 ---
 
-## 6. Gas Optimization
-- `calculateValue` and updating `piBalance` per transaction is expensive at large scale.  
-- Solutions:  
-  - **Batch processing**  
-  - **Off-chain computation** for simulations, only final state updated on-chain.
+## 6. Performance Considerations
+- Frequent updates to `piBalance` can be costly on-chain.  
+- Recommended strategies:  
+  - Batch processing of multiple participants  
+  - Off-chain computation where possible, submitting only final updates on-chain
 
 ---
 
-## 7. Boundary Checks & Edge Cases
-- 0 balance → reward or slashing must **not crash**  
-- 100% slash → participant fully stopped from receiving rewards  
-- Suspend reward duration → must be controlled according to milestones
+## 7. Edge Case Handling
+- Ensure safe behavior for:  
+  - Zero balances  
+  - Maximum slashing (100%)  
+  - Reward suspension durations linked to milestones
 
 ---
 
-## 8. Unit Tests & Simulation
-- Recommended to add unit tests:  
-  - Test all penalty types  
-  - Test all violation levels  
-  - Simulate random participant behavior for stress testing  
-- Helps developers and auditors verify logic security.
+## 8. Testing & Validation
+- Include unit tests covering:  
+  - All penalty types  
+  - Slashing across different violation levels  
+  - Simulation of random participant behavior  
+- This ensures reliability, fairness, and auditability before mainnet deployment.
 
 ---
 
-## 9. Notes
-- All mechanisms are **dynamic**, based on verified transactions.  
-- Reward updates, slashing, and penalties should **always be tested in a local/testing environment** before mainnet deployment.  
-- Integration with README and BaseLinkedPiWithPenalties smart contract is required for consistent documentation.
+## 9. Additional Notes
+- All mechanisms are **transaction-driven** and dynamic.  
+- Testing must be conducted in a **local or test environment** before mainnet launch.  
+- Integration with `BaseLinkedPiWithPenalties.sol` and the README ensures consistent documentation and developer guidance.
