@@ -36,10 +36,84 @@ reputationImpact = amount * 100 / piBalance[participant]
 
 ---
 
+### 1.2.1 Reputation System Model
+
+Reputation is a bounded score:
+
+- Min Score: 0
+- Max Score: 100
+
+### Dynamics:
+- Decreases on penalties
+- Gradually recovers over time (decay model)
+- Weighted in reward calculation
+
+Example:
+rewardMultiplier = reputation / 100
+
+Low reputation reduces earning potential and governance influence.
+
+---
+
+## 1.3 Violation Classification Model
+
+To ensure deterministic enforcement, violations are classified using measurable criteria:
+
+- Minor Violation:
+  - score < X
+  - low-impact or accidental behavior
+
+- Major Violation:
+  - score ≥ X && < Y
+  - high-impact or intentional manipulation
+
+- Repeated Violation:
+  - N violations within a defined time window (T)
+  - triggers escalation regardless of individual severity
+
+Parameters (configurable):
+- X, Y → severity thresholds
+- N → number of violations
+- T → timeframe (e.g., 7 days)
+
+This model ensures consistent and non-ambiguous penalty enforcement.
+
+---
+
 ## 2. Reward Suspension
+
 - Reward suspension halts token updates for a defined period.  
 - Event logged: `RewardSuspended(participant, duration)`  
 - Can be linked to milestone timing for automatic enforcement.
+
+Reward suspension is triggered based on detection signals and confidence scoring.
+
+It applies when participant behavior is flagged as medium-risk but not yet confirmed as malicious.
+
+This mechanism acts as a preventive layer before escalating to slashing or permanent penalties.
+
+---
+
+## 2.1 Detection Layer & Anti-Manipulation
+
+The system relies on a hybrid detection mechanism:
+
+### On-Chain Signals
+- Abnormal transaction frequency
+- Repeated micro-transactions
+- Suspicious allocation patterns
+
+### Off-Chain Analysis (Optional)
+- Behavioral analysis engines
+- Machine learning anomaly detection
+- Oracle-fed risk signals
+
+### Anti-Sybil Protection
+- Identity linkage (KYC / trust graph)
+- Transaction clustering
+- Rate-limiting per participant
+
+Note: A violation is only triggered when detection confidence exceeds a defined threshold.
 
 ---
 
@@ -47,6 +121,14 @@ reputationImpact = amount * 100 / piBalance[participant]
 - Slashing is **dynamic and recorded on-chain** for all levels of violations.  
 - Example function: `slash(percent)`  
 - Always check for **balance sufficiency** to prevent errors or underflows.
+
+### Execution Guarantees
+
+- All penalty operations must be atomic
+- Fail-safe mechanisms prevent partial state updates
+- Smart contracts must include reentrancy protection
+
+This ensures consistency and prevents exploit scenarios.
 
 ---
 
@@ -62,6 +144,23 @@ event PermanentBan(address participant);
 
 ---
 
+  ### Governance Trigger Conditions
+
+   Governance review is required when:
+  - Slashing exceeds a defined threshold (e.g., > 20%)
+  - Permanent ban is proposed
+  - Disputed penalties are flagged
+
+  ### Voting Rules:
+  
+  - Minimum quorum required
+  - Majority or supermajority decision
+  - Time-bound voting window
+
+This ensures decentralization and prevents abuse of authority.
+
+---
+
 ## 5. Audit & Transparency
 - Every action is recorded on-chain and can be queried via API:  
   - Suspended rewards  
@@ -69,6 +168,30 @@ event PermanentBan(address participant);
   - Slashed participants  
   - Permanent bans  
 - Enables the community to monitor compliance and fairness.
+
+  ## Appeal & Reversibility
+
+Participants may request a governance review if:
+- They believe a penalty was incorrectly applied
+
+Possible outcomes:
+- Penalty upheld
+- Penalty reduced
+- Full reversal
+
+All appeals are recorded on-chain for transparency.
+
+  ## Appeal & Reversibility
+
+Participants may request a governance review if:
+- They believe a penalty was incorrectly applied
+
+Possible outcomes:
+- Penalty upheld
+- Penalty reduced
+- Full reversal
+
+All appeals are recorded on-chain for transparency.
 
 ---
 
@@ -104,30 +227,41 @@ event PermanentBan(address participant);
 
 ---
 
-## 10. Penalty Flow (Mermaid Diagram)
+## 10. Penalty & Enforcement Flow (Detection-Driven Model)
 
 ```mermaid
 flowchart TD
-    A[Start: Participant Activity] --> B{Violation Detected?}
-    B -- No --> C[Continue Normal Rewards]
-    B -- Yes --> D{Violation Level?}
-    
-    D -- Minor --> E[Apply Dynamic Penalty]
-    D -- Major --> F[Apply Slashing]
-    D -- Repeated --> G[Consider Permanent Ban]
-    
-    E --> H[Adjust Reputation]
-    F --> H
-    G --> H
-    
-    H --> I[Log Event On-Chain]
-    I --> J{Governance Review Required?}
-    
-    J -- Yes --> K[Community / Trust-Based Vote]
-    J -- No --> L[Owner / Multi-sig Action]
-    
-    K --> M[Update Rewards & Allocation]
-    L --> M
-    
-    M --> N[End: Participant Updated]
-```
+    A[Start: Participant Activity] --> B[Detection Layer Analysis]
+
+    B --> C{Risk Level Based on Confidence}
+
+    C -- Low Risk --> D[Continue Normal Rewards]
+
+    C -- Medium Risk --> E[Apply Reward Suspension]
+    E --> F[Monitor Behavior]
+
+    F --> G{Behavior Improved?}
+    G -- Yes --> D
+    G -- No --> H[Escalate to Violation Classification]
+
+    C -- High Risk --> H{Violation Classification}
+
+    H -- Minor --> I[Apply Dynamic Penalty]
+    H -- Major --> J[Apply Slashing]
+    H -- Repeated --> K[Consider Permanent Ban]
+
+    I --> L[Adjust Reputation]
+    J --> L
+    K --> L
+
+    L --> M[Log Event On-Chain]
+
+    M --> N{Governance Review Required?}
+
+    N -- Yes --> O[Community / Trust-Based Vote]
+    N -- No --> P[Owner / Multi-sig Action]
+
+    O --> Q[Update Rewards & Allocation]
+    P --> Q
+
+    Q --> R[End: Participant Updated]
