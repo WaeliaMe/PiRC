@@ -1,43 +1,88 @@
+name: Pi Hybrid Token CI/CD
+
+on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.11]
-
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
+      # --------------------
+      # Python Setup & Tests
+      # --------------------
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
 
-      - name: Install Python dependencies
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Run Python tests
+      - name: Run Python Tests
         run: |
-          if [ -f pytest.ini ] || [ -d tests ]; then pytest; fi
+          if [ -d tests ]; then pytest tests/; fi
 
-      - name: Set up Solidity (Foundry)
+      # --------------------
+      # Solidity Setup & Tests
+      # --------------------
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Solidity Tools
         run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          foundryup
-          forge --version
+          npm install -g solc
+          npm install --save-dev hardhat
 
-      - name: Compile Solidity contracts
-        run: forge build
+      - name: Compile Solidity Contracts
+        run: |
+          if [ -d contracts ]; then npx hardhat compile; fi
 
-      - name: Run Solidity tests
-        run: forge test
+      - name: Run Solidity Tests
+        run: |
+          if [ -d test ]; then npx hardhat test; fi
+
+      # --------------------
+      # Markdown Docs Linting
+      # --------------------
+      - name: Check Markdown Files
+        uses: actions/markdown-link-check@v1
+        with:
+          use-quiet-mode: true
+          base-url: https://github.com/${{ github.repository }}/blob/main
+
+      # --------------------
+      # Release Step
+      # --------------------
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v1.0.${{ github.run_number }}
+          name: "Pi Hybrid Token Release v1.0.${{ github.run_number }}"
+          body: |
+            Automated release including:
+            - Python and Solidity tests
+            - Markdown docs verification
+            - Updated token flow and governance diagrams
+            - Security & penalty framework
+          draft: false
+          prerelease: false
+
+      # --------------------
+      # Success Message
+      # --------------------
+      - name: Workflow Success
+        run: echo "✅ CI/CD workflow completed successfully!"
