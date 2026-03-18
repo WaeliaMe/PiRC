@@ -101,3 +101,33 @@ event PermanentBan(address participant);
 - All mechanisms are **transaction-driven** and dynamic.  
 - Testing must be conducted in a **local or test environment** before mainnet launch.  
 - Integration with `BaseLinkedPiWithPenalties.sol` and the README ensures consistent documentation and developer guidance.
+
+---
+
+## 10. Penalty Flow (Mermaid Diagram)
+
+```mermaid
+flowchart TD
+    A[Start: Participant Activity] --> B{Violation Detected?}
+    B -- No --> C[Continue Normal Rewards]
+    B -- Yes --> D{Violation Level?}
+    
+    D -- Minor --> E[Apply Dynamic Penalty]
+    D -- Major --> F[Apply Slashing]
+    D -- Repeated --> G[Consider Permanent Ban]
+    
+    E --> H[Adjust Reputation]
+    F --> H
+    G --> H
+    
+    H --> I[Log Event On-Chain]
+    I --> J{Governance Review Required?}
+    
+    J -- Yes --> K[Community / Trust-Based Vote]
+    J -- No --> L[Owner / Multi-sig Action]
+    
+    K --> M[Update Rewards & Allocation]
+    L --> M
+    
+    M --> N[End: Participant Updated]
+```
