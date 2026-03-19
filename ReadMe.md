@@ -5,184 +5,170 @@ See [PiRC1: Pi Ecosystem Token Design](./PiRC1/ReadMe.md)
 
 ## 📌 Overview
 
-This repository contains a **full proposal for a hybrid token launch model** within the Pi Network ecosystem.  
+This repository presents a **hybrid token launch model** designed for the Pi Network ecosystem.
 
-The model is designed to balance:
+The model introduces a **rule-based economic system** that integrates:
 
-- 💧 **Liquidity Pools** — ensure market stability  
-- 🔄 **Developer Incentives** — reward responsible project development  
-- 🛡️ **Ecosystem Reserve** — protect the ecosystem and participants  
-- ⚡ **On-chain Verified Pi Base transactions** — transparency and real activity  
-- 🛠️ **Security & Penalty Framework** — reward suspension, slashing, reputation, and governance  
+- 💧 Liquidity provisioning for market stability  
+- 🔄 Developer incentives tied to verified progress  
+- 🛡️ Ecosystem reserve for protection and enforcement  
+- ⚡ On-chain verified transactions for real economic activity  
+- 🔒 Security and penalty mechanisms embedded in token logic  
 
-The goal is to create a **sustainable, transparent, and secure token economy** that encourages innovation while safeguarding participants.
+The objective is to build a **sustainable, transparent, and manipulation-resistant token economy**.
 
 ---
 
-## 🛠️ Features & Benefits
+## 🧠 Core Concepts
 
-- **Transparent, fair, and data-driven token distribution**  
-- **Milestone-based release for developers** to encourage long-term commitment  
-- **Dynamic reserve redistribution** based on ecosystem growth and security  
-- **Governance mechanisms** for token holders to vote on key decisions  
-- **Clear visualizations** for all stakeholders using diagrams and charts  
-- **On-chain profit verification layer** for transparency  
-- **Security and accountability mechanisms** including:  
-  - Reward suspension  
-  - Slashing (minor, major, repeated)  
-  - Permanent bans  
-  - Reputation adjustment  
-- **Detection Layer & Anti-Manipulation** for fair enforcement  
-- **Base-Linked Pi + Verified Transactions** tracking  
-- **Python Package** for example algorithms, ready for developers
+- **Verified Transactions**  
+  Only real, on-chain economic activity contributes to rewards and distribution.
+
+- **Reputation System (0–100)**  
+  Impacts reward eligibility and adjusts dynamically based on behavior.
+
+- **Milestone-Based Incentives**  
+  Developer rewards are released only after verified progress and governance approval.
+
+- **Integrated Enforcement**  
+  Slashing, penalties, and reward suspension are directly tied to system behavior.
+
+---
+
+## 🚀 Key Features
+
+- Transparent and data-driven token distribution  
+- 65/20/15 allocation model (Liquidity / Developers / Reserve)  
+- Milestone-based developer rewards  
+- On-chain verification of activity and profit  
+- Governance-driven decision making  
+- Built-in anti-manipulation & detection layer  
+- Dynamic penalty system (slashing, suspension, bans)  
+- Developer-ready structure with code examples  
 
 ---
 
 ## 📊 Token Allocation
 
-| **Category**          | **Percentage** | **Purpose**                               |
-|-----------------------|----------------|-------------------------------------------|
-| 💧 Liquidity Pools     | 65%            | Market stability & token liquidity        |
-| 🔄 Developers          | 20%            | Incentivize responsible development, milestone-based release |
-| 🛡️ Ecosystem Reserve   | 15%            | Protect ecosystem, fund emergencies, gradually redistributed |
+| Category              | Percentage | Purpose |
+|----------------------|-----------|--------|
+| 💧 Liquidity Pools    | 65%       | Market stability & liquidity |
+| 🔄 Developers         | 20%       | Incentivize ecosystem development |
+| 🛡️ Ecosystem Reserve  | 15%       | Security, enforcement, redistribution |
 
 ---
 
-## 🔒 Security & Penalty Principles
+## 🏗️ System Architecture
 
-### 1. Reputation & Penalties
+The system combines multiple layers:
 
-- Reputation is **bounded between 0–100**  
-- Decreases on penalties and gradually recovers over time  
-- Weighted in reward calculations  
+- Token Distribution Layer  
+- Verification Layer (On-chain activity)  
+- Security & Enforcement Layer  
+- Governance Layer  
 
-**Example:**  
+📎 See full architecture:
 ```text
-rewardMultiplier = reputation / 100
+/architecture/
+```
+
+---
+
+## 🔒 Security Model (Summary)
+
+Security is **natively integrated into the economic model**, not treated as an external layer.
+
+### Includes:
+
+- Reputation-based reward adjustments  
+- Reward suspension for suspicious behavior  
+- Slashing (minor / major / repeated violations)  
+- Anti-Sybil protection mechanisms  
+- On-chain event logging for all enforcement actions  
+
+📎 Full details:
+```
+/security/
+```
+
+---
+
+## 🏛️ Governance
+
+Governance operates through a **DAO-like structure**:
+
+### Core Functions:
+
+- Proposal submission  
+- Voting mechanisms  
+- Execution of approved actions  
+
+### Used for:
+
+- Milestone approvals  
+- Penalty escalation  
+- Reserve redistribution  
+- System parameter updates  
+
+📎 More:
+```
+/governance/
 ```
 ---
 
-## 2. Violation Classification
+## ⚙️ How to Use
 
-| Type     | Criteria & Description |
-|----------|----------------------|
-| Minor    | score < X; low-impact or accidental behavior |
-| Major    | X ≤ score < Y; high-impact or intentional manipulation |
-| Repeated | N violations within T timeframe; triggers escalation |
-
-**Parameters configurable:** X, Y, N, T.
-
----
-
-## 3. Detection Layer & Anti-Manipulation
-
-**Hybrid system:**
-
-### On-Chain Signals
-- Abnormal transaction frequency  
-- Repeated micro-transactions  
-- Suspicious allocation patterns  
-
-### Off-Chain Analysis (Optional)
-- Behavioral analysis engines  
-- ML anomaly detection  
-- Oracle-fed risk signals  
-
-### Anti-Sybil Protection
-- Identity linkage (KYC / trust graph)  
-- Transaction clustering  
-- Rate-limiting per participant  
-
-**Note:** A violation is triggered only when **detection confidence exceeds threshold**.
+1. Read `proposal.md` for the full model  
+2. Review `tokenomics.md` for allocation logic  
+3. Explore `/diagrams/` for visual flows  
+4. Check `/architecture/` for system design  
+5. Review `/security/` for enforcement logic  
+6. Test `/code_examples/` for sample implementations  
 
 ---
 
-## 4. Reward Suspension
+## 📂 Project Structure
 
-- Preventive measure for **medium-risk participants**  
-- Event logged: `RewardSuspended(participant, duration)`  
-- Duration can be **fixed** or **dynamic** based on severity/confidence  
-- Suspended rewards are **monitored**; if behavior improves → rewards resume  
-- Escalation to slashing/ban occurs only if suspicious behavior continues
-
----
-
-## 5. Slashing & Penalties
-
-- Dynamic, recorded on-chain, ensures consistency  
-- **Execution guarantees:** atomic operations, fail-safes, reentrancy protection  
-
-**Example events:**  
-```solidity
-event AllocationReduced(address participant, uint256 amount);
-event Slashed(address participant, uint256 percent);
-event PermanentBan(address participant);
+```text
+.
+├── README.md
+├── proposal.md
+├── tokenomics.md
+├── architecture/
+├── security/
+├── governance/
+├── economic_model/
+├── profit_verification/
+├── diagrams/
+├── code_examples/
+├── docs/
+├── implementation.md
+└── LICENSE
 ```
 ---
-## 6. Governance & Appeals
 
-- Governance review triggered when:  
-  - Slashing > threshold (e.g., 20%)  
-  - Permanent ban proposed  
-  - Disputed penalties  
+## 📎 Additional Documentation
 
-- **Voting rules:** quorum, majority/supermajority, time-bound window  
-
-- **Appeals:** participants can request review; outcomes recorded on-chain:  
-  - Penalty upheld  
-  - Penalty reduced  
-  - Full reversal
-
----
-
-## 📈 How to Use
-
-1. Review **proposal.md** for full explanation of the model  
-2. Check **tokenomics.md** for detailed allocation numbers and redistribution formulas  
-3. Explore **diagrams/** for visual representation of token flows  
-4. Explore **architecture/** for system structure and flow  
-5. Check **profit_verification/** for on-chain profit sources  
-6. Check **security/** for penalties, slashing, and fraud detection logic  
-7. Check **economic_model/** for detailed profit-based incentive logic  
-8. Run **code_examples/** for sample computations of allocation, rewards, and reserve management  
+- `/docs/` → Extended explanations  
+- `/economic_model/` → Reward & multiplier logic  
+- `/profit_verification/` → On-chain profit tracking  
+- `/code_examples/` → Developer testing utilities  
 
 ---
 
 ## ✅ Notes
 
-- All calculations reference **Pi Base**; USD is for display only  
-- The system tracks **real verified transactions** and adjusts rewards dynamically  
-- Python examples help developers test allocation, redistribution, and governance logic  
-- All security and penalty mechanisms are **transaction-driven** and dynamic  
-- Testing must be conducted in a **local/test environment** before mainnet launch
-  
----
-  
-## 📂 FULL FOLDER STRUCTURE
+- All calculations are based on **Pi Base units**  
+- USD values are for reference only  
+- Rewards depend on **verified activity**, not speculation  
+- The system is designed to **resist manipulation and abuse**  
+- Testing is recommended before **mainnet deployment**
 
-```text
-hybrid-token-model/
-├── README.md                  ← Main README (updated with edits & notes)  
-├── proposal.md                ← Full proposal for hybrid token model  
-├── tokenomics.md              ← Detailed token allocation & redistribution formulas  
-├── governance/                ← Governance & contribution tracking  
-│   └── contribution_leaderboard.md (or similar)  
-├── security/                  ← Security layer & penalties  
-│   └── BaseLinkedPiWithPenalties.sol  
-├── architecture/              ← System & governance flow diagrams  
-│   └── governance_flow.md  
-├── code_examples/             ← Example algorithms & Python pseudo-code  
-│   └── README.md (enhanced)  
-├── diagrams/                  ← Visual illustrations & reward distribution  
-│   └── ecosystem_rewards.md  
-├── docs/                      ← Documentation updates  
-│   └── Security.md  
-├── economic_model/            ← Economic & transaction multiplier logic  
-│   └── economic_model.md  
-├── hybrid-token-model/        ← Subfolder for hybrid token docs  
-│   └── economic_model.md  
-├── profit_verification/       ← On-chain profit verification  
-│   └── ProfitDistributed event.md  
-├── LICENSE  
-├── ReadMe.md                  ← Added notes section  
-├── implementation.md          ← Implementation notes & ideas
+---
+
+## 🎯 Vision
+
+This model aims to **redefine token launches** by introducing:  
+
+- A **self-regulating, transparent, and enforceable economic system**  
+- Instead of a static token distribution model
