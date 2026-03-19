@@ -35,15 +35,16 @@ jobs:
         run: |
           if [ -d tests ]; then pytest tests/; fi
 
-      - name: Set up Node.js
+      - name: Set up Node.js (only if package.json exists)
+        if: ${{ exists('package.json') }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install Node.js Dependencies
-        run: |
-          if [ -f package.json ]; then npm install; fi
+        if: ${{ exists('package.json') }}
+        run: npm ci
 
       - name: Run Solidity / Hardhat Tests
         run: |
@@ -60,12 +61,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install Dependencies
-        run: |
-          if [ -f package.json ]; then npm install; fi
+        run: npm ci
 
       - name: Deploy to Testnet
         env:
@@ -86,12 +86,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install Dependencies
-        run: |
-          if [ -f package.json ]; then npm install; fi
+        run: npm ci
 
       - name: Deploy to Mainnet
         env:
